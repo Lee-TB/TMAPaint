@@ -2,6 +2,6 @@ import { Circle } from './Circle';
 import { Rectangle } from './Rectangle';
 
 export interface ShapeFactory {
-    createCircle(): Circle;
+    createCircle(radius: number): Circle;
     createRectangle(width: number, height: number): Rectangle;
 }

@@ -8,8 +8,8 @@ export class Client {
         this._factory = factory;
     }
 
-    circle(): Circle {
-        return this._factory.createCircle();
+    circle(radius: number): Circle {
+        return this._factory.createCircle(radius);
     }
 
     rectangle(width: number, height: number): Rectangle {
