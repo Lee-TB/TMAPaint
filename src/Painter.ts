@@ -2,36 +2,41 @@ import { IShapeFactory } from './models/IShapeFactory';
 import { IRectangle } from './models/IRectangle';
 import { ICircle } from './models/ICircle';
 import { CanvasSingleton } from './models/CanvasSingleton';
-import { IShape } from './models/IShape';
 
 export class Painter {
-    private _canvas: HTMLCanvasElement = CanvasSingleton.getInstance().canvas;
+    private _rectangle?: IRectangle;
+    private _circle?: ICircle;
 
     constructor(private _shapeFactory: IShapeFactory) {}
 
+    // paint specific shape
     public paint(shapeType: string) {
-        const rectangle: IRectangle = this._shapeFactory.createRectangle();
-        const circle: ICircle = this._shapeFactory.createCircle();
+        this._rectangle = this._shapeFactory.createRectangle();
+        this._circle = this._shapeFactory.createCircle();
+
+        this.stopPaint();
         if (shapeType === 'rectangle') {
-            rectangle.paint();
-            this.stopPaint(circle);
+            this._rectangle.paint();
             return;
         }
 
         if (shapeType === 'circle') {
-            circle.paint();
-            this.stopPaint(rectangle);
+            this._circle.paint();
             return;
         }
+
         throw new Error('shapeType is not available!');
     }
 
-    public stopPaint(shape: IShape): void {
-        shape.stopPaint();
+    // stop any painting
+    public stopPaint(): void {
+        this._circle?.stopPaint();
+        this._rectangle?.stopPaint();
     }
 
+    // set canvas screen
     public setScreen(width: number, height: number): void {
-        this._canvas.width = width;
-        this._canvas.height = height;
+        CanvasSingleton.getInstance().canvas.width = width;
+        CanvasSingleton.getInstance().canvas.height = height;
     }
 }

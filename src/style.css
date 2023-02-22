@@ -32,7 +32,21 @@ h1 {
   justify-content: center;
   align-items: center;
   padding: 2px 4px;
+  outline: none;
+  border: none;
+  border-radius: 4px;
 }
+
+.btn:disabled:hover {
+  background-color: rgba(239, 239, 239, 0.3);
+  color: rgba(16, 16, 16, 0.3);
+}
+
+.btn:hover {
+  background-color: #108fcf;
+  color: white;
+}
+
 
 .tools {
   margin: 10px 0;
@@ -52,4 +66,68 @@ h1 {
   'wght' 500,
   'GRAD' 0,
   'opsz' 48
+}
+
+/**
+ * Simple HTML/CSS switch
+ */
+ .switch {
+  display: inline-block;
+  position: relative;
+  width: 50px;
+  height: 25px;
+  border-radius: 20px;
+  background: #dfd9ea;
+  transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  vertical-align: middle;
+  cursor: pointer;
+}
+.switch::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  background: #fafafa;
+  border-radius: 50%;
+  transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.switch:active::before {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(128,128,128,0.1);
+}
+input:checked + .switch {
+  background: #108fcf;
+}
+
+input:checked + .switch::before {
+  left: 27px;
+  background: #fff;
+}
+input:checked + .switch:active::before {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(0,150,136,0.2);
+}
+
+/** style radio button */
+input[name="shape"] {
+  display: none;
+  appearance: none;
+}
+
+input[name="shape"] + label {
+  cursor: pointer;
+}
+
+input[name="shape"] + label {
+  padding: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+}
+
+input[name="shape"]:checked + label {
+  cursor: pointer;
+  background-color: #108fcf;
+  color: white;
 }

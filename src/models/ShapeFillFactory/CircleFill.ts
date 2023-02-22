@@ -3,10 +3,7 @@ import { Point } from '../Point';
 import { CanvasSingleton } from '../CanvasSingleton';
 
 export class CircleFill implements ICircle {
-    private _startPosition: Point = new Point(0, 0);
-    private _isPainting: boolean = false;
-
-    constructor(private _radius: number = 0) {}
+    constructor(private _startPosition: Point = new Point(0, 0), private _radius: number = 0) {}
 
     public getRadius(): number {
         return this._radius;
@@ -35,25 +32,31 @@ export class CircleFill implements ICircle {
     }
 
     private _handleMouseDown(e: MouseEvent): void {
-        this._isPainting = true;
         this._startPosition = new Point(e.offsetX, e.offsetY);
+        CanvasSingleton.getInstance().isPainting = true;
         CanvasSingleton.getInstance().context.beginPath();
     }
 
     private _handleMouseMove(e: MouseEvent): void {
-        if (this._isPainting) {
+        if (CanvasSingleton.getInstance().isPainting) {
         }
     }
 
     private _handleMouseUp(e: MouseEvent): void {
-        this._isPainting = false;
+        this._radius =
+            Math.max(
+                Math.abs(e.offsetX - this._startPosition.getX()),
+                Math.abs(e.offsetY - this._startPosition.getY())
+            ) / 2;
+
+        this._startPosition.setX((this._startPosition.getX() + e.offsetX) / 2);
+        this._startPosition.setY((this._startPosition.getY() + e.offsetY) / 2);
+
+        CanvasSingleton.getInstance().isPainting = false;
         CanvasSingleton.getInstance().context.arc(
             this._startPosition.getX(),
             this._startPosition.getY(),
-            Math.max(
-                e.offsetX - this._startPosition.getX(),
-                e.offsetY - this._startPosition.getY()
-            ),
+            this._radius,
             0,
             2 * Math.PI
         );

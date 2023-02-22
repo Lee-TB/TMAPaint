@@ -5,10 +5,7 @@
         <link rel="icon" type="image/svg+xml" href="/src/typescript.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TMA Paint</title>
-        <!-- <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        /> -->
+        <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css" />
     </head>
     <body>
         <div id="root">
@@ -24,27 +21,37 @@
                         </button>
                     </div>
                     <div class="tool-group shape">
-                        <button class="btn" id="rectangle-button">
+                        <input
+                            type="radio"
+                            name="shape"
+                            id="rectangle-radio"
+                            value="rectangle"
+                            checked
+                        />
+                        <label for="rectangle-radio">
                             <span class="material-symbols-outlined"> rectangle </span>
-                        </button>
-                        <button class="btn" id="circle-button">
+                        </label>
+                        <input type="radio" name="shape" id="circle-radio" value="circle" />
+                        <label for="circle-radio">
                             <span class="material-symbols-outlined"> circle </span>
-                        </button>
+                        </label>
                     </div>
                     <div class="tool-group mode">
-                        <button class="btn" id="fill-button">
-                            <span>Fill</span>
-                            <span class="material-symbols-outlined fill"> square </span>
-                        </button>
-                        <button class="btn" id="stroke-button">
-                            <span>Stroke</span>
-                            <span class="material-symbols-outlined"> square </span>
-                        </button>
+                        <span>Stroke</span>
+                        <input type="checkbox" hidden="hidden" id="fill-stroke-switch" />
+                        <label class="switch" for="fill-stroke-switch"></label>
+                        <span>Fill</span>
                     </div>
                 </div>
                 <canvas id="canvas"></canvas>
             </div>
         </div>
         <script type="module" src="/src/main.ts"></script>
+        <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"
+        ></script>
+        <script src="semantic/dist/semantic.min.js"></script>
     </body>
 </html>

@@ -3,10 +3,11 @@ import { Point } from '../Point';
 import { CanvasSingleton } from '../CanvasSingleton';
 
 export class RectangleFill implements IRectangle {
-    private _startPosition!: Point;
-    private _isPainting!: boolean;
-
-    constructor(private _width: number = 0, private _height: number = 0) {}
+    constructor(
+        private _startPosition: Point = new Point(0, 0),
+        private _width: number = 0,
+        private _height: number = 0
+    ) {}
 
     public getWidth(): number {
         return this._width;
@@ -43,23 +44,26 @@ export class RectangleFill implements IRectangle {
     }
 
     private _handleMouseDown(e: MouseEvent): void {
-        this._isPainting = true;
         this._startPosition = new Point(e.offsetX, e.offsetY);
+        CanvasSingleton.getInstance().isPainting = true;
         CanvasSingleton.getInstance().context.beginPath();
     }
 
     private _handleMouseMove(e: MouseEvent): void {
-        if (this._isPainting) {
+        if (CanvasSingleton.getInstance().isPainting) {
         }
     }
 
     private _handleMouseUp(e: MouseEvent): void {
-        this._isPainting = false;
+        this._width = e.offsetX - this._startPosition.getX();
+        this._height = e.offsetY - this._startPosition.getY();
+
+        CanvasSingleton.getInstance().isPainting = false;
         CanvasSingleton.getInstance().context.fillRect(
             this._startPosition.getX(),
             this._startPosition.getY(),
-            e.offsetX - this._startPosition.getX(),
-            e.offsetY - this._startPosition.getY()
+            this._width,
+            this._height
         );
     }
 }

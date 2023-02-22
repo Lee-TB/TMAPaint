@@ -3,10 +3,11 @@ import { IRectangle } from '../IRectangle';
 import { Point } from '../Point';
 
 export class RectangleStroke implements IRectangle {
-    private _startPosition: Point = new Point(0, 0);
-    private _isPainting: boolean = false;
-
-    constructor(private _width: number = 0, private _height: number = 0) {}
+    constructor(
+        private _startPosition: Point = new Point(0, 0),
+        private _width: number = 0,
+        private _height: number = 0
+    ) {}
 
     public getWidth(): number {
         return this._width;
@@ -43,7 +44,7 @@ export class RectangleStroke implements IRectangle {
     }
 
     private _handleMouseDown(e: MouseEvent): void {
-        this._isPainting = true;
+        CanvasSingleton.getInstance().isPainting = true;
         this._startPosition = new Point(e.offsetX, e.offsetY);
         CanvasSingleton.getInstance().context.beginPath();
     }
@@ -51,12 +52,14 @@ export class RectangleStroke implements IRectangle {
     private _handleMouseMove(e: MouseEvent): void {}
 
     private _handleMouseUp(e: MouseEvent): void {
-        this._isPainting = false;
+        this._width = e.offsetX - this._startPosition.getX();
+        this._height = e.offsetY - this._startPosition.getY();
+        CanvasSingleton.getInstance().isPainting = false;
         CanvasSingleton.getInstance().context.strokeRect(
             this._startPosition.getX(),
             this._startPosition.getY(),
-            e.offsetX - this._startPosition.getX(),
-            e.offsetY - this._startPosition.getY()
+            this._width,
+            this._height
         );
     }
 }
