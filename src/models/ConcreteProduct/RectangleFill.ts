@@ -1,28 +1,9 @@
-import { IRectangle } from '../AbstractProduct/IRectangle';
-import { Point } from '../Point';
 import { CanvasSingleton } from '../CanvasSingleton';
+import { Rectangle } from '../AbstractProduct/Rectangle';
 
-export class RectangleFill implements IRectangle {
-    constructor(
-        private _startPosition: Point = new Point(0, 0),
-        private _width: number = 0,
-        private _height: number = 0
-    ) {}
-
-    public getWidth(): number {
-        return this._width;
-    }
-
-    public setWidth(width: number): void {
-        this._width = width;
-    }
-
-    public getHeight(): number {
-        return this._height;
-    }
-
-    public setHeight(height: number): void {
-        this._height = height;
+export class RectangleFill extends Rectangle {
+    constructor(x: number, y: number, width: number, height: number) {
+        super(x, y, width, height);
     }
 
     public paint(): void {
@@ -44,7 +25,8 @@ export class RectangleFill implements IRectangle {
     }
 
     private _handleMouseDown(e: MouseEvent): void {
-        this._startPosition = new Point(e.offsetX, e.offsetY);
+        super.setX(e.offsetX);
+        super.setY(e.offsetY);
         CanvasSingleton.getInstance().isPainting = true;
         CanvasSingleton.getInstance().context.beginPath();
     }
@@ -55,15 +37,15 @@ export class RectangleFill implements IRectangle {
     }
 
     private _handleMouseUp(e: MouseEvent): void {
-        this._width = e.offsetX - this._startPosition.getX();
-        this._height = e.offsetY - this._startPosition.getY();
+        super.setWidth(e.offsetX - super.getX());
+        super.setHeight(e.offsetY - super.getY());
 
         CanvasSingleton.getInstance().isPainting = false;
         CanvasSingleton.getInstance().context.fillRect(
-            this._startPosition.getX(),
-            this._startPosition.getY(),
-            this._width,
-            this._height
+            super.getX(),
+            super.getY(),
+            super.getWidth(),
+            super.getHeight()
         );
     }
 }

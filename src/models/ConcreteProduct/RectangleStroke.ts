@@ -1,28 +1,9 @@
 import { CanvasSingleton } from '../CanvasSingleton';
-import { IRectangle } from '../AbstractProduct/IRectangle';
-import { Point } from '../Point';
+import { Rectangle } from '../AbstractProduct/Rectangle';
 
-export class RectangleStroke implements IRectangle {
-    constructor(
-        private _startPosition: Point = new Point(0, 0),
-        private _width: number = 0,
-        private _height: number = 0
-    ) {}
-
-    public getWidth(): number {
-        return this._width;
-    }
-
-    public setWidth(width: number): void {
-        this._width = width;
-    }
-
-    public getHeight(): number {
-        return this._height;
-    }
-
-    public setHeight(height: number): void {
-        this._height = height;
+export class RectangleStroke extends Rectangle {
+    constructor(x: number, y: number, width: number, height: number) {
+        super(x, y, width, height);
     }
 
     public paint(): void {
@@ -31,7 +12,7 @@ export class RectangleStroke implements IRectangle {
         CanvasSingleton.getInstance().canvas.addEventListener('mouseup', this._handleMouseUp);
     }
 
-    public stopPaint(): void {
+    stopPaint(): void {
         CanvasSingleton.getInstance().canvas.removeEventListener(
             'mousedown',
             this._handleMouseDown
@@ -44,22 +25,27 @@ export class RectangleStroke implements IRectangle {
     }
 
     private _handleMouseDown(e: MouseEvent): void {
+        super.setX(e.offsetX);
+        super.setY(e.offsetY);
         CanvasSingleton.getInstance().isPainting = true;
-        this._startPosition = new Point(e.offsetX, e.offsetY);
         CanvasSingleton.getInstance().context.beginPath();
     }
 
-    private _handleMouseMove(e: MouseEvent): void {}
+    private _handleMouseMove(e: MouseEvent): void {
+        if (CanvasSingleton.getInstance().isPainting) {
+        }
+    }
 
     private _handleMouseUp(e: MouseEvent): void {
-        this._width = e.offsetX - this._startPosition.getX();
-        this._height = e.offsetY - this._startPosition.getY();
+        super.setWidth(e.offsetX - super.getX());
+        super.setHeight(e.offsetY - super.getY());
+
         CanvasSingleton.getInstance().isPainting = false;
         CanvasSingleton.getInstance().context.strokeRect(
-            this._startPosition.getX(),
-            this._startPosition.getY(),
-            this._width,
-            this._height
+            super.getX(),
+            super.getY(),
+            super.getWidth(),
+            super.getHeight()
         );
     }
 }

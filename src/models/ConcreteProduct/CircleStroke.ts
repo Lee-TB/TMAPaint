@@ -1,16 +1,9 @@
-import { ICircle } from '../AbstractProduct/ICircle';
-import { Point } from '../Point';
+import { Circle } from '../AbstractProduct/Circle';
 import { CanvasSingleton } from '../CanvasSingleton';
 
-export class CircleStroke implements ICircle {
-    constructor(private _startPosition: Point = new Point(0, 0), private _radius: number = 0) {}
-
-    public getRadius(): number {
-        return this._radius;
-    }
-
-    public setRadius(radius: number): void {
-        this._radius = radius;
+export class CircleStroke extends Circle {
+    constructor(x: number, y: number, radius: number) {
+        super(x, y, radius);
     }
 
     public paint(): void {
@@ -32,9 +25,10 @@ export class CircleStroke implements ICircle {
     }
 
     private _handleMouseDown(e: MouseEvent): void {
+        super.setX(e.offsetX);
+        super.setY(e.offsetY);
         CanvasSingleton.getInstance().isPainting = true;
         CanvasSingleton.getInstance().context.beginPath();
-        this._startPosition = new Point(e.offsetX, e.offsetY);
     }
 
     private _handleMouseMove(e: MouseEvent): void {
@@ -43,20 +37,18 @@ export class CircleStroke implements ICircle {
     }
 
     private _handleMouseUp(e: MouseEvent): void {
-        this._radius =
-            Math.max(
-                Math.abs(e.offsetX - this._startPosition.getX()),
-                Math.abs(e.offsetY - this._startPosition.getY())
-            ) / 2;
+        super.setRadius(
+            Math.max(Math.abs(e.offsetX - super.getX()), Math.abs(e.offsetY - super.getY())) / 2
+        );
 
-        this._startPosition.setX((this._startPosition.getX() + e.offsetX) / 2);
-        this._startPosition.setY((this._startPosition.getY() + e.offsetY) / 2);
+        super.setX((super.getX() + e.offsetX) / 2);
+        super.setY((super.getY() + e.offsetY) / 2);
 
         CanvasSingleton.getInstance().isPainting = false;
         CanvasSingleton.getInstance().context.arc(
-            this._startPosition.getX(),
-            this._startPosition.getY(),
-            this._radius,
+            super.getX(),
+            super.getY(),
+            super.getRadius(),
             0,
             2 * Math.PI
         );

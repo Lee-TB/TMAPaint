@@ -1,7 +1,6 @@
-import { ICircle } from '../AbstractProduct/ICircle';
-import { IRectangle } from '../AbstractProduct/IRectangle';
+import { Shape } from '../AbstractProduct/Shape';
+import { ShapeType } from '../enums/ShapeType';
 
 export interface IShapeFactory {
-    createCircle(): ICircle;
-    createRectangle(): IRectangle;
+    createShape(shapeType: ShapeType): Shape;
 }

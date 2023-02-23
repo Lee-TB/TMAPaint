@@ -1,18 +1,18 @@
 import { IShapeFactory } from './models/AbstractFactory/IShapeFactory';
-import { IRectangle } from './models/AbstractProduct/IRectangle';
-import { ICircle } from './models/AbstractProduct/ICircle';
+import { Shape } from './models/AbstractProduct/Shape';
 import { CanvasSingleton } from './models/CanvasSingleton';
+import { ShapeType } from './models/enums/ShapeType';
 
 export class Painter {
-    private _rectangle?: IRectangle;
-    private _circle?: ICircle;
+    private _rectangle?: Shape;
+    private _circle?: Shape;
 
     constructor(private _shapeFactory: IShapeFactory) {}
 
     // paint specific shape
     public paint(shapeType: string) {
-        this._rectangle = this._shapeFactory.createRectangle();
-        this._circle = this._shapeFactory.createCircle();
+        this._rectangle = this._shapeFactory.createShape(ShapeType.rectangle);
+        this._circle = this._shapeFactory.createShape(ShapeType.circle);
 
         this.stopPaint();
         if (shapeType === 'rectangle') {
