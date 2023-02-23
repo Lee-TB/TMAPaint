@@ -1,3 +1,4 @@
+import { ShapeVariant } from '../enums/ShapeVariant';
 import { Point } from './Point';
 
 export abstract class Shape extends Point {
@@ -5,6 +6,5 @@ export abstract class Shape extends Point {
         super(x, y);
     }
 
-    abstract paint(): void;
-    abstract stopPaint(): void;
+    abstract getVariant(): ShapeVariant;
 }

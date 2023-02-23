@@ -1,7 +1,8 @@
-import { Painter } from './Painter';
+import { Painter, PainterType } from './Painter';
 import { CanvasSingleton } from './models/CanvasSingleton';
 import { ShapeFillFactory } from './models/ConcreteFactory/ShapeFillFactory';
 import { ShapeStrokeFactory } from './models/ConcreteFactory/ShapeStrokeFactory';
+import { ShapeType } from './models/enums/ShapeType';
 import './style.css';
 
 window.addEventListener('load', () => {
@@ -9,7 +10,33 @@ window.addEventListener('load', () => {
     const shapeButtonList: NodeListOf<HTMLInputElement> =
         document.querySelectorAll('input[name="shape"]');
 
-    let painter: Painter;
+    let painter: PainterType;
+
+    // Tell canvas which shape is painting
+    const shapeIsPainting = () => {
+        shapeButtonList.forEach((shapeButton) => {
+            if (shapeButton.value === 'rectangle' && shapeButton.checked) {
+                painter.stopPaint();
+                painter.paint(ShapeType.rectangle);
+                CanvasSingleton.getInstance().canvas.style.cursor = 'crosshair';
+            }
+
+            if (shapeButton.value === 'circle' && shapeButton.checked) {
+                painter.stopPaint();
+                painter.paint(ShapeType.circle);
+                CanvasSingleton.getInstance().canvas.style.cursor = 'crosshair';
+            }
+        });
+    };
+
+    // default app state when you go to app the first time.
+    const defaultState = () => {
+        painter = Painter(new ShapeStrokeFactory());
+        painter.setScreen(800, 600);
+        shapeIsPainting();
+        addShapeButtonListEventListener();
+    };
+    defaultState();
 
     // add event listener to select shape buttons
     function addShapeButtonListEventListener() {
@@ -18,43 +45,19 @@ window.addEventListener('load', () => {
         });
     }
 
-    // Tell canvas which shape is painting
-    const shapeIsPainting = () => {
-        shapeButtonList.forEach((shapeButton) => {
-            if (shapeButton.value === 'rectangle' && shapeButton.checked) {
-                painter.paint('rectangle');
-                CanvasSingleton.getInstance().canvas.style.cursor = 'crosshair';
-            }
-
-            if (shapeButton.value === 'circle' && shapeButton.checked) {
-                painter.paint('circle');
-                CanvasSingleton.getInstance().canvas.style.cursor = 'crosshair';
-            }
-        });
-    };
-
     // Switch to Fill or Stroke shape and choose corresponding Shape Factory
     const handleClickFillStrokeSwitch = () => {
         if (fillStrokeSwitch.checked) {
             painter.stopPaint();
-            painter = new Painter(new ShapeFillFactory());
+            painter = Painter(new ShapeFillFactory());
         } else {
             painter.stopPaint();
-            painter = new Painter(new ShapeStrokeFactory());
+            painter = Painter(new ShapeStrokeFactory());
         }
         shapeIsPainting();
     };
 
     fillStrokeSwitch?.addEventListener('click', handleClickFillStrokeSwitch);
-
-    // default app state when you go to app the first time.
-    const defaultState = () => {
-        painter = new Painter(new ShapeStrokeFactory());
-        painter.setScreen(800, 600);
-        shapeIsPainting();
-        addShapeButtonListEventListener();
-    };
-    defaultState();
 });
 
 // pseudo client code
