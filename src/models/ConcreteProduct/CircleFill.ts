@@ -1,28 +1,16 @@
-import { IRectangle } from '../IRectangle';
+import { ICircle } from '../AbstractProduct/ICircle';
 import { Point } from '../Point';
 import { CanvasSingleton } from '../CanvasSingleton';
 
-export class RectangleFill implements IRectangle {
-    constructor(
-        private _startPosition: Point = new Point(0, 0),
-        private _width: number = 0,
-        private _height: number = 0
-    ) {}
+export class CircleFill implements ICircle {
+    constructor(private _startPosition: Point = new Point(0, 0), private _radius: number = 0) {}
 
-    public getWidth(): number {
-        return this._width;
+    public getRadius(): number {
+        return this._radius;
     }
 
-    public setWidth(width: number): void {
-        this._width = width;
-    }
-
-    public getHeight(): number {
-        return this._height;
-    }
-
-    public setHeight(height: number): void {
-        this._height = height;
+    public setRadius(radius: number): void {
+        this._radius = radius;
     }
 
     public paint(): void {
@@ -55,15 +43,24 @@ export class RectangleFill implements IRectangle {
     }
 
     private _handleMouseUp(e: MouseEvent): void {
-        this._width = e.offsetX - this._startPosition.getX();
-        this._height = e.offsetY - this._startPosition.getY();
+        this._radius =
+            Math.max(
+                Math.abs(e.offsetX - this._startPosition.getX()),
+                Math.abs(e.offsetY - this._startPosition.getY())
+            ) / 2;
+
+        this._startPosition.setX((this._startPosition.getX() + e.offsetX) / 2);
+        this._startPosition.setY((this._startPosition.getY() + e.offsetY) / 2);
 
         CanvasSingleton.getInstance().isPainting = false;
-        CanvasSingleton.getInstance().context.fillRect(
+        CanvasSingleton.getInstance().context.arc(
             this._startPosition.getX(),
             this._startPosition.getY(),
-            this._width,
-            this._height
+            this._radius,
+            0,
+            2 * Math.PI
         );
+        CanvasSingleton.getInstance().context.fill();
+        CanvasSingleton.getInstance().context.closePath();
     }
 }

@@ -1,8 +1,8 @@
-import { ICircle } from '../ICircle';
+import { ICircle } from '../AbstractProduct/ICircle';
 import { Point } from '../Point';
 import { CanvasSingleton } from '../CanvasSingleton';
 
-export class CircleFill implements ICircle {
+export class CircleStroke implements ICircle {
     constructor(private _startPosition: Point = new Point(0, 0), private _radius: number = 0) {}
 
     public getRadius(): number {
@@ -32,9 +32,9 @@ export class CircleFill implements ICircle {
     }
 
     private _handleMouseDown(e: MouseEvent): void {
-        this._startPosition = new Point(e.offsetX, e.offsetY);
         CanvasSingleton.getInstance().isPainting = true;
         CanvasSingleton.getInstance().context.beginPath();
+        this._startPosition = new Point(e.offsetX, e.offsetY);
     }
 
     private _handleMouseMove(e: MouseEvent): void {
@@ -60,7 +60,7 @@ export class CircleFill implements ICircle {
             0,
             2 * Math.PI
         );
-        CanvasSingleton.getInstance().context.fill();
+        CanvasSingleton.getInstance().context.stroke();
         CanvasSingleton.getInstance().context.closePath();
     }
 }

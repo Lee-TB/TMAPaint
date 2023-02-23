@@ -1,7 +1,7 @@
 import { Painter } from './Painter';
 import { CanvasSingleton } from './models/CanvasSingleton';
-import { ShapeFillFactory } from './models/ShapeFillFactory/ShapeFillFactory';
-import { ShapeStrokeFactory } from './models/ShapeStrokeFactory/ShapeStrokeFactory';
+import { ShapeFillFactory } from './models/ConcreteFactory/ShapeFillFactory';
+import { ShapeStrokeFactory } from './models/ConcreteFactory/ShapeStrokeFactory';
 import './style.css';
 
 window.addEventListener('load', () => {

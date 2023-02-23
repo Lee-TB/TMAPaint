@@ -1,16 +1,28 @@
-import { ICircle } from '../ICircle';
-import { Point } from '../Point';
 import { CanvasSingleton } from '../CanvasSingleton';
+import { IRectangle } from '../AbstractProduct/IRectangle';
+import { Point } from '../Point';
 
-export class CircleStroke implements ICircle {
-    constructor(private _startPosition: Point = new Point(0, 0), private _radius: number = 0) {}
+export class RectangleStroke implements IRectangle {
+    constructor(
+        private _startPosition: Point = new Point(0, 0),
+        private _width: number = 0,
+        private _height: number = 0
+    ) {}
 
-    public getRadius(): number {
-        return this._radius;
+    public getWidth(): number {
+        return this._width;
     }
 
-    public setRadius(radius: number): void {
-        this._radius = radius;
+    public setWidth(width: number): void {
+        this._width = width;
+    }
+
+    public getHeight(): number {
+        return this._height;
+    }
+
+    public setHeight(height: number): void {
+        this._height = height;
     }
 
     public paint(): void {
@@ -19,7 +31,7 @@ export class CircleStroke implements ICircle {
         CanvasSingleton.getInstance().canvas.addEventListener('mouseup', this._handleMouseUp);
     }
 
-    stopPaint(): void {
+    public stopPaint(): void {
         CanvasSingleton.getInstance().canvas.removeEventListener(
             'mousedown',
             this._handleMouseDown
@@ -33,34 +45,21 @@ export class CircleStroke implements ICircle {
 
     private _handleMouseDown(e: MouseEvent): void {
         CanvasSingleton.getInstance().isPainting = true;
-        CanvasSingleton.getInstance().context.beginPath();
         this._startPosition = new Point(e.offsetX, e.offsetY);
+        CanvasSingleton.getInstance().context.beginPath();
     }
 
-    private _handleMouseMove(e: MouseEvent): void {
-        if (CanvasSingleton.getInstance().isPainting) {
-        }
-    }
+    private _handleMouseMove(e: MouseEvent): void {}
 
     private _handleMouseUp(e: MouseEvent): void {
-        this._radius =
-            Math.max(
-                Math.abs(e.offsetX - this._startPosition.getX()),
-                Math.abs(e.offsetY - this._startPosition.getY())
-            ) / 2;
-
-        this._startPosition.setX((this._startPosition.getX() + e.offsetX) / 2);
-        this._startPosition.setY((this._startPosition.getY() + e.offsetY) / 2);
-
+        this._width = e.offsetX - this._startPosition.getX();
+        this._height = e.offsetY - this._startPosition.getY();
         CanvasSingleton.getInstance().isPainting = false;
-        CanvasSingleton.getInstance().context.arc(
+        CanvasSingleton.getInstance().context.strokeRect(
             this._startPosition.getX(),
             this._startPosition.getY(),
-            this._radius,
-            0,
-            2 * Math.PI
+            this._width,
+            this._height
         );
-        CanvasSingleton.getInstance().context.stroke();
-        CanvasSingleton.getInstance().context.closePath();
     }
 }

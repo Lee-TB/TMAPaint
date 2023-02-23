@@ -1,6 +1,6 @@
-import { IShapeFactory } from './models/IShapeFactory';
-import { IRectangle } from './models/IRectangle';
-import { ICircle } from './models/ICircle';
+import { IShapeFactory } from './models/AbstractFactory/IShapeFactory';
+import { IRectangle } from './models/AbstractProduct/IRectangle';
+import { ICircle } from './models/AbstractProduct/ICircle';
 import { CanvasSingleton } from './models/CanvasSingleton';
 
 export class Painter {
