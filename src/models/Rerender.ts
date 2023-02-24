@@ -8,6 +8,16 @@ import { RectangleStroke } from './ConcreteProduct/RectangleStroke';
 export class Rerender {
     private _items!: Shape[];
 
+    public rerender(items: Shape[]) {
+        CanvasSingleton.getInstance().context.clearRect(
+            0,
+            0,
+            CanvasSingleton.getInstance().canvas.width,
+            CanvasSingleton.getInstance().canvas.height
+        );
+        this.render(items);
+    }
+
     public render(items: Shape[]) {
         this._items = items;
         this._items.forEach((item) => {

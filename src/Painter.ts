@@ -41,9 +41,10 @@ export function Painter(shapeFactory: IShapeFactory): PainterType {
                     CanvasSingleton.getInstance().isPainting = false;
                     rectangle.setWidth(e.offsetX - rectangle.getX());
                     rectangle.setHeight(e.offsetY - rectangle.getY());
-                    CanvasSingleton.getInstance().undoList.push(rectangle.clone());
-                    console.log(CanvasSingleton.getInstance().undoList);
-                    rerender.render(CanvasSingleton.getInstance().undoList);
+                    CanvasSingleton.getInstance().undoRedo.undoList.push(rectangle.clone());
+                    console.log(CanvasSingleton.getInstance().undoRedo.undoList);
+                    rerender.render(CanvasSingleton.getInstance().undoRedo.undoList);
+                    CanvasSingleton.getInstance().undoRedo.clearRedoList();
                 };
             }
 
@@ -54,9 +55,10 @@ export function Painter(shapeFactory: IShapeFactory): PainterType {
                     rectangle.setHeight(e.offsetY - rectangle.getY());
 
                     CanvasSingleton.getInstance().isPainting = false;
-                    CanvasSingleton.getInstance().undoList.push(rectangle.clone());
-                    console.log(CanvasSingleton.getInstance().undoList);
-                    rerender.render(CanvasSingleton.getInstance().undoList);
+                    CanvasSingleton.getInstance().undoRedo.undoList.push(rectangle.clone());
+                    console.log(CanvasSingleton.getInstance().undoRedo.undoList);
+                    rerender.render(CanvasSingleton.getInstance().undoRedo.undoList);
+                    CanvasSingleton.getInstance().undoRedo.clearRedoList();
                 };
             }
         }
@@ -86,9 +88,10 @@ export function Painter(shapeFactory: IShapeFactory): PainterType {
                     circle.setX((circle.getX() + e.offsetX) / 2);
                     circle.setY((circle.getY() + e.offsetY) / 2);
                     CanvasSingleton.getInstance().isPainting = false;
-                    CanvasSingleton.getInstance().undoList.push(circle.clone());
-                    console.log(CanvasSingleton.getInstance().undoList);
-                    rerender.render(CanvasSingleton.getInstance().undoList);
+                    CanvasSingleton.getInstance().undoRedo.undoList.push(circle.clone());
+                    rerender.render(CanvasSingleton.getInstance().undoRedo.undoList);
+                    console.log(CanvasSingleton.getInstance().undoRedo.undoList);
+                    CanvasSingleton.getInstance().undoRedo.clearRedoList();
                 };
             }
 
@@ -104,9 +107,10 @@ export function Painter(shapeFactory: IShapeFactory): PainterType {
                     circle.setX((circle.getX() + e.offsetX) / 2);
                     circle.setY((circle.getY() + e.offsetY) / 2);
                     CanvasSingleton.getInstance().isPainting = false;
-                    CanvasSingleton.getInstance().undoList.push(circle.clone());
-                    console.log(CanvasSingleton.getInstance().undoList);
-                    rerender.render(CanvasSingleton.getInstance().undoList);
+                    CanvasSingleton.getInstance().undoRedo.undoList.push(circle.clone());
+                    console.log(CanvasSingleton.getInstance().undoRedo.undoList);
+                    rerender.render(CanvasSingleton.getInstance().undoRedo.undoList);
+                    CanvasSingleton.getInstance().undoRedo.clearRedoList();
                 };
             }
         }

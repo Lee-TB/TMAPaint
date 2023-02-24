@@ -40,6 +40,7 @@ h1 {
 .btn:disabled:hover {
   background-color: rgba(239, 239, 239, 0.3);
   color: rgba(16, 16, 16, 0.3);
+  cursor: unset;
 }
 
 .btn:hover {
