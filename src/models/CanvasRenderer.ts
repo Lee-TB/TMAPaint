@@ -4,6 +4,10 @@ import { CircleFill } from './ConcreteProduct/CircleFill';
 import { CircleStroke } from './ConcreteProduct/CircleStroke';
 import { RectangleFill } from './ConcreteProduct/RectangleFill';
 import { RectangleStroke } from './ConcreteProduct/RectangleStroke';
+import { StateHistory } from './StateHistory';
+import { stateHistoryElement } from '../htmlElements/stateHistoryElements';
+import { Circle } from './AbstractProduct/Circle';
+import { Rectangle } from './AbstractProduct/Rectangle';
 
 export class CanvasRenderer {
     private static instance: CanvasRenderer;
@@ -80,5 +84,56 @@ export class CanvasRenderer {
                 Canvas.getInstance().context.closePath();
             }
         });
+
+        stateHistoryElement.innerHTML = StateHistory.getInstance()
+            .getUndoList()
+            .map((item) => {
+                if (item instanceof Rectangle)
+                    return `
+                        <li>
+                            <span>
+                                <strong>Name : </strong>
+                                <span>Rectangle</span>                    
+                            </span>
+                            <span>
+                                <strong>X</strong>
+                                <input value="${item.getX()}" size="3" maxlength="3"                    
+                            </span>
+                            <span>
+                                <strong>Y</strong>
+                                <input value="${item.getY()}" size="3" maxlength="3"                    
+                            </span>
+                            <span>
+                                <strong>Width</strong>
+                                <input value="${item.getWidth()}" size="3" maxlength="3"                    
+                            </span>
+                            <span>
+                                <strong>Height</strong>
+                                <input value="${item.getHeight()}" size="3" maxlength="3"                    
+                            </span>
+                        
+                        </li>`;
+                if (item instanceof Circle)
+                    return `
+                    <li>
+                        <span>
+                            <strong>Name : </strong>
+                            <span>Circle</span>                    
+                        </span>
+                        <span>
+                            <strong>X</strong>
+                            <input value="${item.getX()}" size="3" maxlength="3"                    
+                        </span>
+                        <span>
+                            <strong>Y</strong>
+                            <input value="${item.getY()}" size="3" maxlength="3"                    
+                        </span>
+                        <span>
+                            <strong>Radius</strong>
+                            <input value="${item.getRadius()}" size="3" maxlength="3"                    
+                        </span>
+                    </li>`;
+            })
+            .join('');
     }
 }

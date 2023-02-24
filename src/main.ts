@@ -1,11 +1,11 @@
 import './style.css';
 import { Painter, PainterType } from './Painter';
-import { ShapeFillFactory } from './models/ConcreteFactory/ShapeFillFactory';
-import { ShapeStrokeFactory } from './models/ConcreteFactory/ShapeStrokeFactory';
 import { ShapeType } from './models/enums/ShapeType';
 import { Canvas } from './models/Canvas';
 import { CanvasRenderer } from './models/CanvasRenderer';
 import { StateHistory } from './models/StateHistory';
+import { FactoryMaker } from './models/FactoryMaker/FactoryMaker';
+import { ShapeVariant } from './models/enums/ShapeVariant';
 
 const SCREEN_WIDTH = 1600;
 const SCREEN_HEIGHT = 900;
@@ -20,13 +20,13 @@ window.addEventListener('load', () => {
 
     // Initialize painter
     let painter: PainterType;
-    painter = Painter(new ShapeStrokeFactory());
+    painter = Painter(FactoryMaker.getInstance().createFactory(ShapeVariant.stroke));
     painter.setScreen((SCREEN_WIDTH * 2) / 3, (SCREEN_HEIGHT * 2) / 3);
-    shapeIsPainting();
+    handleChangeShape();
     addShapeButtonListEventListener();
 
-    // Tell canvas which shape is painting
-    function shapeIsPainting() {
+    // Tell canvas which shape is being paint (Event Select Shape)
+    function handleChangeShape() {
         shapeButtonList.forEach((shapeButton) => {
             if (shapeButton.value === 'rectangle' && shapeButton.checked) {
                 painter.stopPaintingAll();
@@ -42,53 +42,43 @@ window.addEventListener('load', () => {
         });
     }
 
-    // Switch to Fill or Stroke shape and choose corresponding Shape Factory
+    // Switch to Fill or Stroke shape and choose corresponding Shape Factory (Event )
     function handleClickFillStrokeSwitch() {
         painter.stopPaintingAll();
         if (fillStrokeSwitch.checked) {
-            painter = Painter(new ShapeFillFactory());
+            painter = Painter(FactoryMaker.getInstance().createFactory(ShapeVariant.fill));
         } else {
-            painter = Painter(new ShapeStrokeFactory());
+            painter = Painter(FactoryMaker.getInstance().createFactory(ShapeVariant.stroke));
         }
-        shapeIsPainting();
+        // After switch strok or fill, run handleChangeShape
+        handleChangeShape();
     }
 
-    // handle Undo
+    // Handle Undo
     function handleUndo() {
         StateHistory.getInstance().undo();
         CanvasRenderer.getInstance().rerender(StateHistory.getInstance().getUndoList());
         console.log(StateHistory.getInstance().getUndoList());
     }
 
-    // handle Redo
+    // Handle Redo
     function handleRedo() {
         StateHistory.getInstance().redo();
         CanvasRenderer.getInstance().rerender(StateHistory.getInstance().getUndoList());
         console.log(StateHistory.getInstance().getUndoList());
     }
 
-    // add event listener to select shape buttons
+    // Add event listener to select shape buttons
     function addShapeButtonListEventListener() {
         shapeButtonList.forEach((shapeButton) => {
-            shapeButton.addEventListener('change', shapeIsPainting);
+            shapeButton.addEventListener('change', handleChangeShape);
         });
     }
 
-    // add event listener to switch stroke or fill
+    // Add event listener to switch stroke or fill
     fillStrokeSwitch?.addEventListener('click', handleClickFillStrokeSwitch);
 
     // add event listener to undo
     undoButton?.addEventListener('click', handleUndo);
     redoButton?.addEventListener('click', handleRedo);
 });
-
-// pseudo client code
-// const factory = new ShapeStrokeFactory();
-// Painter.paint('rectangle');
-// Painter.paint('circle');
-// Painter.paint('line');
-// pen.color = 'white'
-// pen.style = 'dot'
-// pen.weight = 20
-// pen.shape
-// Painter.setPen(pen)

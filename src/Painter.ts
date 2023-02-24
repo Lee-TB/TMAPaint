@@ -14,25 +14,25 @@ export function Painter(shapeFactory: IShapeFactory): PainterType {
     const rectangle: Rectangle = <Rectangle>shapeFactory.createShape(ShapeType.rectangle);
     const circle: Circle = <Circle>shapeFactory.createShape(ShapeType.circle);
 
+    // Add a canvas event listener
     function startPainting(shapeType: ShapeType) {
-        // paint rectangle
-        if (shapeType === ShapeType.rectangle) {
-            rectangle.paintByMouse();
-        }
-
-        // paint circle
-        if (shapeType === ShapeType.circle) {
-            circle.paintByMouse();
+        switch (shapeType) {
+            case ShapeType.rectangle:
+                rectangle.paintByMouse();
+                break;
+            case ShapeType.circle:
+                circle.paintByMouse();
+                break;
         }
     }
 
-    // stop all current mouse event
+    // Remove all current canvas event listeners
     function stopPaintingAll() {
         rectangle.stopPaintByMouse();
         circle.stopPaintByMouse();
     }
 
-    // resize sreen
+    // Resize sreen
     function setScreen(width: number, height: number): void {
         Canvas.getInstance().canvasElement.width = width;
         Canvas.getInstance().canvasElement.height = height;

@@ -1,10 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
 
-* {
+*, ul {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+ul {
+  list-style-type: none;
 }
 
 #root {
@@ -14,7 +18,23 @@
 }
 
 .wrapper {
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: row;
+}
+
+#state-history {
+  margin: 120px 0;
+  padding: 0 20px;
+  min-width: 500px;
+  text-align: left;
+}
+
+#state-history li {
+  padding: 8px 0;
+}
+
+#state-history li strong {
+  margin-left: 4px;
 }
 
 h1 {
