@@ -7,4 +7,5 @@ export abstract class Shape extends Point {
     }
 
     abstract getVariant(): ShapeVariant;
+    abstract clone(): Shape;
 }

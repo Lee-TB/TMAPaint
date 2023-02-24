@@ -1,8 +1,8 @@
 import { IShapeFactory } from './models/AbstractFactory/IShapeFactory';
 import { Circle } from './models/AbstractProduct/Circle';
 import { Rectangle } from './models/AbstractProduct/Rectangle';
-import { Shape } from './models/AbstractProduct/Shape';
 import { CanvasSingleton } from './models/CanvasSingleton';
+import { Rerender } from './models/Rerender';
 import { ShapeType } from './models/enums/ShapeType';
 import { ShapeVariant } from './models/enums/ShapeVariant';
 
@@ -13,9 +13,9 @@ export interface PainterType {
 }
 
 export function Painter(shapeFactory: IShapeFactory): PainterType {
-    const rectangle: Rectangle = <Rectangle>shapeFactory.createShape(ShapeType.rectangle);
     const circle: Circle = <Circle>shapeFactory.createShape(ShapeType.circle);
-    const history: Shape[] = [];
+    const rectangle: Rectangle = <Rectangle>shapeFactory.createShape(ShapeType.rectangle);
+    const rerender = new Rerender();
 
     let handleMouseDown: (e: MouseEvent) => void;
     let handleMouseMove: (e: MouseEvent) => void;
@@ -24,83 +24,58 @@ export function Painter(shapeFactory: IShapeFactory): PainterType {
     function paint(shapeType: ShapeType) {
         // paint rectangle
         if (shapeType === ShapeType.rectangle) {
+            handleMouseDown = (e: MouseEvent) => {
+                rectangle.setX(e.offsetX);
+                rectangle.setY(e.offsetY);
+                CanvasSingleton.getInstance().isPainting = true;
+            };
+
+            handleMouseMove = (e: MouseEvent) => {
+                if (CanvasSingleton.getInstance().isPainting) {
+                }
+            };
+
             // paint rectangle stroke
             if (rectangle.getVariant() === ShapeVariant.stroke) {
-                handleMouseDown = (e: MouseEvent) => {
-                    rectangle.setX(e.offsetX);
-                    rectangle.setY(e.offsetY);
-                    CanvasSingleton.getInstance().isPainting = true;
-                    CanvasSingleton.getInstance().context.beginPath();
-                };
-
-                handleMouseMove = (e: MouseEvent) => {
-                    if (CanvasSingleton.getInstance().isPainting) {
-                    }
-                };
-
                 handleMouseUp = (e: MouseEvent) => {
+                    CanvasSingleton.getInstance().isPainting = false;
                     rectangle.setWidth(e.offsetX - rectangle.getX());
                     rectangle.setHeight(e.offsetY - rectangle.getY());
-
-                    CanvasSingleton.getInstance().isPainting = false;
-                    CanvasSingleton.getInstance().context.strokeRect(
-                        rectangle.getX(),
-                        rectangle.getY(),
-                        rectangle.getWidth(),
-                        rectangle.getHeight()
-                    );
-                    history.push(rectangle);
-                    console.log(history);
+                    CanvasSingleton.getInstance().undoList.push(rectangle.clone());
+                    console.log(CanvasSingleton.getInstance().undoList);
+                    rerender.render(CanvasSingleton.getInstance().undoList);
                 };
             }
 
             // paint rectangle fill
             if (rectangle.getVariant() === ShapeVariant.fill) {
-                handleMouseDown = (e: MouseEvent) => {
-                    rectangle.setX(e.offsetX);
-                    rectangle.setY(e.offsetY);
-                    CanvasSingleton.getInstance().isPainting = true;
-                    CanvasSingleton.getInstance().context.beginPath();
-                };
-
-                handleMouseMove = (e: MouseEvent) => {
-                    if (CanvasSingleton.getInstance().isPainting) {
-                    }
-                };
-
                 handleMouseUp = (e: MouseEvent) => {
                     rectangle.setWidth(e.offsetX - rectangle.getX());
                     rectangle.setHeight(e.offsetY - rectangle.getY());
 
                     CanvasSingleton.getInstance().isPainting = false;
-                    CanvasSingleton.getInstance().context.fillRect(
-                        rectangle.getX(),
-                        rectangle.getY(),
-                        rectangle.getWidth(),
-                        rectangle.getHeight()
-                    );
-                    history.push(rectangle);
-                    console.log(history);
+                    CanvasSingleton.getInstance().undoList.push(rectangle.clone());
+                    console.log(CanvasSingleton.getInstance().undoList);
+                    rerender.render(CanvasSingleton.getInstance().undoList);
                 };
             }
         }
 
         // paint circle
         if (shapeType === ShapeType.circle) {
+            handleMouseDown = (e: MouseEvent) => {
+                circle.setX(e.offsetX);
+                circle.setY(e.offsetY);
+                CanvasSingleton.getInstance().isPainting = true;
+            };
+
+            handleMouseMove = (e: MouseEvent) => {
+                if (CanvasSingleton.getInstance().isPainting) {
+                }
+            };
+
             // paint circle stroke
             if (circle.getVariant() === ShapeVariant.stroke) {
-                handleMouseDown = (e: MouseEvent) => {
-                    circle.setX(e.offsetX);
-                    circle.setY(e.offsetY);
-                    CanvasSingleton.getInstance().isPainting = true;
-                    CanvasSingleton.getInstance().context.beginPath();
-                };
-
-                handleMouseMove = (e: MouseEvent) => {
-                    if (CanvasSingleton.getInstance().isPainting) {
-                    }
-                };
-
                 handleMouseUp = (e: MouseEvent) => {
                     circle.setRadius(
                         Math.max(
@@ -111,34 +86,14 @@ export function Painter(shapeFactory: IShapeFactory): PainterType {
                     circle.setX((circle.getX() + e.offsetX) / 2);
                     circle.setY((circle.getY() + e.offsetY) / 2);
                     CanvasSingleton.getInstance().isPainting = false;
-                    CanvasSingleton.getInstance().context.arc(
-                        circle.getX(),
-                        circle.getY(),
-                        circle.getRadius(),
-                        0,
-                        2 * Math.PI
-                    );
-                    CanvasSingleton.getInstance().context.stroke();
-                    CanvasSingleton.getInstance().context.closePath();
-                    history.push(circle);
-                    console.log(history);
+                    CanvasSingleton.getInstance().undoList.push(circle.clone());
+                    console.log(CanvasSingleton.getInstance().undoList);
+                    rerender.render(CanvasSingleton.getInstance().undoList);
                 };
             }
 
             // paint circle fill
             if (circle.getVariant() === ShapeVariant.fill) {
-                handleMouseDown = (e: MouseEvent) => {
-                    circle.setX(e.offsetX);
-                    circle.setY(e.offsetY);
-                    CanvasSingleton.getInstance().isPainting = true;
-                    CanvasSingleton.getInstance().context.beginPath();
-                };
-
-                handleMouseMove = (e: MouseEvent) => {
-                    if (CanvasSingleton.getInstance().isPainting) {
-                    }
-                };
-
                 handleMouseUp = (e: MouseEvent) => {
                     circle.setRadius(
                         Math.max(
@@ -149,17 +104,9 @@ export function Painter(shapeFactory: IShapeFactory): PainterType {
                     circle.setX((circle.getX() + e.offsetX) / 2);
                     circle.setY((circle.getY() + e.offsetY) / 2);
                     CanvasSingleton.getInstance().isPainting = false;
-                    CanvasSingleton.getInstance().context.arc(
-                        circle.getX(),
-                        circle.getY(),
-                        circle.getRadius(),
-                        0,
-                        2 * Math.PI
-                    );
-                    CanvasSingleton.getInstance().context.fill();
-                    CanvasSingleton.getInstance().context.closePath();
-                    history.push(circle);
-                    console.log(history);
+                    CanvasSingleton.getInstance().undoList.push(circle.clone());
+                    console.log(CanvasSingleton.getInstance().undoList);
+                    rerender.render(CanvasSingleton.getInstance().undoList);
                 };
             }
         }
@@ -169,12 +116,14 @@ export function Painter(shapeFactory: IShapeFactory): PainterType {
         CanvasSingleton.getInstance().canvas.addEventListener('mouseup', handleMouseUp);
     }
 
+    // remove paint event
     function stopPaint() {
         CanvasSingleton.getInstance().canvas.removeEventListener('mousedown', handleMouseDown);
         CanvasSingleton.getInstance().canvas.removeEventListener('mousemove', handleMouseMove);
         CanvasSingleton.getInstance().canvas.removeEventListener('mouseup', handleMouseUp);
     }
 
+    // resize sreen
     function setScreen(width: number, height: number): void {
         CanvasSingleton.getInstance().canvas.width = width;
         CanvasSingleton.getInstance().canvas.height = height;
