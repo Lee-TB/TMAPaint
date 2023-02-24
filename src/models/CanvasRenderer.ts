@@ -1,19 +1,30 @@
-import { CanvasSingleton } from './CanvasSingleton';
+import { Canvas } from './Canvas';
 import { Shape } from './AbstractProduct/Shape';
 import { CircleFill } from './ConcreteProduct/CircleFill';
 import { CircleStroke } from './ConcreteProduct/CircleStroke';
 import { RectangleFill } from './ConcreteProduct/RectangleFill';
 import { RectangleStroke } from './ConcreteProduct/RectangleStroke';
 
-export class Rerender {
+export class CanvasRenderer {
+    private static instance: CanvasRenderer;
     private _items!: Shape[];
 
+    private constructor() {}
+
+    public static getInstance(): CanvasRenderer {
+        if (!CanvasRenderer.instance) {
+            CanvasRenderer.instance = new CanvasRenderer();
+        }
+
+        return CanvasRenderer.instance;
+    }
+
     public rerender(items: Shape[]) {
-        CanvasSingleton.getInstance().context.clearRect(
+        Canvas.getInstance().context.clearRect(
             0,
             0,
-            CanvasSingleton.getInstance().canvas.width,
-            CanvasSingleton.getInstance().canvas.height
+            Canvas.getInstance().canvasElement.width,
+            Canvas.getInstance().canvasElement.height
         );
         this.render(items);
     }
@@ -22,51 +33,51 @@ export class Rerender {
         this._items = items;
         this._items.forEach((item) => {
             if (item instanceof RectangleStroke) {
-                CanvasSingleton.getInstance().context.beginPath();
-                CanvasSingleton.getInstance().context.strokeRect(
+                Canvas.getInstance().context.beginPath();
+                Canvas.getInstance().context.strokeRect(
                     item.getX(),
                     item.getY(),
                     item.getWidth(),
                     item.getHeight()
                 );
-                CanvasSingleton.getInstance().context.closePath();
+                Canvas.getInstance().context.closePath();
             }
 
             if (item instanceof RectangleFill) {
-                CanvasSingleton.getInstance().context.beginPath();
-                CanvasSingleton.getInstance().context.fillRect(
+                Canvas.getInstance().context.beginPath();
+                Canvas.getInstance().context.fillRect(
                     item.getX(),
                     item.getY(),
                     item.getWidth(),
                     item.getHeight()
                 );
-                CanvasSingleton.getInstance().context.closePath();
+                Canvas.getInstance().context.closePath();
             }
 
             if (item instanceof CircleStroke) {
-                CanvasSingleton.getInstance().context.beginPath();
-                CanvasSingleton.getInstance().context.arc(
+                Canvas.getInstance().context.beginPath();
+                Canvas.getInstance().context.arc(
                     item.getX(),
                     item.getY(),
                     item.getRadius(),
                     0,
                     2 * Math.PI
                 );
-                CanvasSingleton.getInstance().context.stroke();
-                CanvasSingleton.getInstance().context.closePath();
+                Canvas.getInstance().context.stroke();
+                Canvas.getInstance().context.closePath();
             }
 
             if (item instanceof CircleFill) {
-                CanvasSingleton.getInstance().context.beginPath();
-                CanvasSingleton.getInstance().context.arc(
+                Canvas.getInstance().context.beginPath();
+                Canvas.getInstance().context.arc(
                     item.getX(),
                     item.getY(),
                     item.getRadius(),
                     0,
                     2 * Math.PI
                 );
-                CanvasSingleton.getInstance().context.fill();
-                CanvasSingleton.getInstance().context.closePath();
+                Canvas.getInstance().context.fill();
+                Canvas.getInstance().context.closePath();
             }
         });
     }

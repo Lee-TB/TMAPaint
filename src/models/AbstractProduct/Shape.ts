@@ -6,6 +6,7 @@ export abstract class Shape extends Point {
         super(x, y);
     }
 
-    abstract getVariant(): ShapeVariant;
     abstract clone(): Shape;
+    abstract paintByMouse(): void;
+    abstract stopPaintByMouse(): void;
 }
