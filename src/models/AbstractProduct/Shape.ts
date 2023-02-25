@@ -1,12 +1,15 @@
-import { ShapeVariant } from '../enums/ShapeVariant';
 import { Point } from './Point';
 
-export abstract class Shape extends Point {
-    constructor(x: number, y: number) {
-        super(x, y);
+export abstract class Shape {
+    constructor(protected location: Point) {}
+    abstract paint(ctx: CanvasRenderingContext2D): void;
+    abstract clone(): Shape;
+
+    public getLocation(): Point {
+        return this.location;
     }
 
-    abstract clone(): Shape;
-    abstract paintByMouse(): void;
-    abstract stopPaintByMouse(): void;
+    public setLocation(location: Point): void {
+        this.location = location;
+    }
 }

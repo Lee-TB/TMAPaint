@@ -1,11 +1,9 @@
+import { Point } from './Point';
 import { Shape } from './Shape';
 
 export abstract class Circle extends Shape {
-    private _radius: number;
-
-    constructor(x: number, y: number, radius: number) {
-        super(x, y);
-        this._radius = radius;
+    constructor(location: Point, private _radius: number) {
+        super(location);
     }
 
     public getRadius(): number {

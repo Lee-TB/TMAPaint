@@ -1,13 +1,9 @@
 import { Shape } from './Shape';
+import { Point } from './Point';
 
 export abstract class Rectangle extends Shape {
-    private _width: number;
-    private _height: number;
-
-    constructor(x: number, y: number, width: number, height: number) {
-        super(x, y);
-        this._width = width;
-        this._height = height;
+    constructor(location: Point, private _width: number, private _height: number) {
+        super(location);
     }
 
     getWidth(): number {

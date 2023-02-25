@@ -17,9 +17,14 @@
                         <div class="tool-group">
                             <button class="btn" id="undo-button">
                                 <span class="material-symbols-outlined"> undo </span>
+                                <span>undo</span>
                             </button>
                             <button class="btn" id="redo-button">
                                 <span class="material-symbols-outlined"> redo </span>
+                                <span>redo</span>
+                            </button>
+                            <button class="btn" id="random-shape-button">
+                                <strong>Random</strong>
                             </button>
                         </div>
                         <div class="tool-group shape">
@@ -39,10 +44,10 @@
                             </label>
                         </div>
                         <div class="tool-group mode">
-                            <span>Stroke</span>
+                            <strong>2D</strong>
                             <input type="checkbox" hidden="hidden" id="fill-stroke-switch" />
                             <label class="switch" for="fill-stroke-switch"></label>
-                            <span>Fill</span>
+                            <strong>3D</strong>
                         </div>
                     </div>
                     <canvas id="canvas"></canvas>
@@ -50,11 +55,5 @@
             </div>
         </div>
         <script type="module" src="/src/main.ts"></script>
-        <script
-            src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-            crossorigin="anonymous"
-        ></script>
-        <script src="semantic/dist/semantic.min.js"></script>
     </body>
 </html>

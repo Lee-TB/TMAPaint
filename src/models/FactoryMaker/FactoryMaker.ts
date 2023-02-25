@@ -1,7 +1,7 @@
 import { IShapeFactory } from '../AbstractFactory/IShapeFactory';
-import { ShapeFillFactory } from '../ConcreteFactory/ShapeFillFactory';
-import { ShapeStrokeFactory } from '../ConcreteFactory/ShapeStrokeFactory';
-import { ShapeVariant } from '../enums/ShapeVariant';
+import { Shape2DFactory } from '../ConcreteFactory/Shape2DFactory';
+import { Shape3DFactory } from '../ConcreteFactory/Shape3DFactory';
+import { ShapeFactoryType } from '../enums/ShapeFactoryType';
 
 export class FactoryMaker {
     private static instance: FactoryMaker;
@@ -13,12 +13,12 @@ export class FactoryMaker {
         return FactoryMaker.instance;
     }
 
-    createFactory(shapeVariant: ShapeVariant): IShapeFactory {
+    createFactory(shapeVariant: ShapeFactoryType): IShapeFactory {
         switch (shapeVariant) {
-            case ShapeVariant.stroke:
-                return new ShapeStrokeFactory();
-            case ShapeVariant.fill:
-                return new ShapeFillFactory();
+            case ShapeFactoryType.Shape2D:
+                return new Shape2DFactory();
+            case ShapeFactoryType.shape3D:
+                return new Shape3DFactory();
         }
     }
 }
