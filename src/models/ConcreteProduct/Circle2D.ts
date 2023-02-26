@@ -19,6 +19,7 @@ export class Circle2D extends Circle {
         );
         ctx.stroke();
     }
+
     clone(): Shape {
         return new Circle2D();
     }

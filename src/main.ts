@@ -1,118 +1,76 @@
 import { ShapeType } from './models/enums/ShapeType';
 import { ShapeFactoryType } from './models/enums/ShapeFactoryType';
 import { FactoryMaker } from './models/FactoryMaker/FactoryMaker';
-import { Canvas } from './models/Canvas';
+import { Painter } from './models/Painter';
 import './style.css';
-import { getRandomNumber } from './utils/getRandomNumber';
-import { Shape } from './models/AbstractProduct/Shape';
 
 const SCREEN_WIDTH = 1600;
 const SCREEN_HEIGHT = 900;
 
 window.addEventListener('load', () => {
-    // Gọi DOM Elements
+    /**
+     * Gọi DOM Elements
+     */
+    const undoButton = document.querySelector('#undo-button') as HTMLButtonElement;
+    const redoButton = document.querySelector('#redo-button') as HTMLButtonElement;
+    const clearButton = document.querySelector('#clear-button') as HTMLButtonElement;
     const addRandomButton = document.querySelector('#random-shape-button') as HTMLButtonElement;
     const shapeButtonList: NodeListOf<HTMLInputElement> =
         document.querySelectorAll('input[name="shape"]');
-    const undoButton = document.querySelector('#undo-button') as HTMLButtonElement;
-    const redoButton = document.querySelector('#redo-button') as HTMLButtonElement;
+    const shapeTable = document.querySelector('#shape-table') as HTMLTableElement;
 
-    // Khởi tạo các biến shape factory
+    /**
+     * Khởi tạo các đổi tượng cần thiết
+     */
+    // Gọi canvas dom
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    // Tạo shapeFactory từ factoryMaker
     const shapeFactory = FactoryMaker.getInstance().createFactory(ShapeFactoryType.Shape2D);
-    const canvas = new Canvas(document.getElementById('canvas') as HTMLCanvasElement);
-    canvas.setScreen(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    const painter = new Painter(canvas, shapeFactory);
+    painter.setScreen(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
+    // Thực hiện tạo hình ngẫu nhiên khi nhấn nút
+    function handleAddRandom() {
+        painter.paintRandomShape();
+    }
     addRandomButton.addEventListener('click', handleAddRandom);
 
-    function handleAddRandom() {
-        const randomShape = getRandomNumber(0, 1);
-        let shape: Shape;
-        if (randomShape) {
-            shape = shapeFactory.createShape(ShapeType.rectangle);
-        } else {
-            shape = shapeFactory.createShape(ShapeType.circle);
-        }
-        canvas.setShape(shape);
-        canvas.paintRandomShape();
-    }
-
-    handleChangeShape();
-    // Sự kiện chọn Shape
+    // Lắng nghe sự kiện kéo thả chuột
     function handleChangeShape() {
         shapeButtonList.forEach((shapeButton) => {
             if (shapeButton.value === 'rectangle' && shapeButton.checked) {
-                const rectangle = shapeFactory.createShape(ShapeType.rectangle);
-                canvas.setShape(rectangle);
-                canvas.subscribePaintByMouse();
-            }
-
-            if (shapeButton.value === 'circle' && shapeButton.checked) {
-                const circle = shapeFactory.createShape(ShapeType.circle);
-                canvas.setShape(circle);
-                canvas.subscribePaintByMouse();
+                // Ngừng vẽ
+                painter.unsubscribePaintByMouse(); // unsubscribe để chắn chắn hủy vẽ shape trước đó
+                // Tiếp tục vẽ
+                painter.subscribePaintByMouse(ShapeType.rectangle); // Truyền shapeFactory và shapeType để bên trong, trao lại nhiệm vụ tạo shape cho mouse event
+            } else if (shapeButton.value === 'circle' && shapeButton.checked) {
+                // Ngừng vẽ
+                painter.unsubscribePaintByMouse(); // unsubscribe để chắn chắn hủy vẽ shape trước đó
+                // Tiếp tục vẽ
+                painter.subscribePaintByMouse(ShapeType.circle); // Truyền shapeFactory và shapeType để bên trong, trao lại nhiệm vụ tạo shape cho mouse event
             }
         });
     }
+    // Gọi ngay lặp tức bởi vì mặc định sẽ có một shape được chọn
+    handleChangeShape();
 
-    // Lắng nghe sự kiên thay đổi hình
-    function listenShapeButtons() {
-        shapeButtonList.forEach((shapeButton) => {
-            shapeButton.addEventListener('change', handleChangeShape);
-        });
+    // Mỗi lần thay đổi shape ta sẽ lắng nghe lại sự kiện
+    shapeButtonList.forEach((shapeButton) => {
+        shapeButton.addEventListener('change', handleChangeShape);
+    });
+
+    function handleUndo() {
+        painter.undo();
     }
-    listenShapeButtons();
+    undoButton.addEventListener('click', handleUndo);
 
-    // canvas.addEventListener('click', (e: MouseEvent) => {
-    //     console.log(e.offsetX, e.offsetY);
-    //     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    //     const circle: Circle = shapeFactory.createShape(ShapeType.circle) as Circle;
-    //     const rectangle: Rectangle = shapeFactory.createShape(ShapeType.rectangle) as Rectangle;
-    //     const location = new Point(e.offsetX, e.offsetY);
-    //     rectangle.setLocation(location);
-    //     rectangle.setWidth(200);
-    //     rectangle.setHeight(100);
-    //     rectangle.paint(ctx);
-    //     // circle.setLocation(location);
-    //     // circle.setRadius(100);
-    //     // circle.paint(ctx);
-    // });
-    // // Initialize painter
-    // let painter: PainterType;
-    // painter = Painter(FactoryMaker.getInstance().createFactory(ShapeVariant.stroke));
-    // painter.setScreen(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3);
-    // handleChangeShape();
-    // addShapeButtonListEventListener();
+    function handleRedo() {
+        painter.redo();
+    }
+    redoButton.addEventListener('click', handleRedo);
 
-    // // Switch to Fill or Stroke shape and choose corresponding Shape Factory (Event )
-    // function handleClickFillStrokeSwitch() {
-    //     painter.stopPaintingAll();
-    //     if (fillStrokeSwitch.checked) {
-    //         painter = Painter(FactoryMaker.getInstance().createFactory(ShapeVariant.fill));
-    //     } else {
-    //         painter = Painter(FactoryMaker.getInstance().createFactory(ShapeVariant.stroke));
-    //     }
-    //     // After switch strok or fill, run handleChangeShape
-    //     handleChangeShape();
-    // }
-
-    // // Handle Undo
-    // function handleUndo() {
-    //     StateHistory.getInstance().undo();
-    //     CanvasRenderer.getInstance().rerender(StateHistory.getInstance().getUndoList());
-    //     console.log(StateHistory.getInstance().getUndoList());
-    // }
-
-    // // Handle Redo
-    // function handleRedo() {
-    //     StateHistory.getInstance().redo();
-    //     CanvasRenderer.getInstance().rerender(StateHistory.getInstance().getUndoList());
-    //     console.log(StateHistory.getInstance().getUndoList());
-    // }
-
-    // // Add event listener to switch stroke or fill
-    // fillStrokeSwitch?.addEventListener('click', handleClickFillStrokeSwitch);
-
-    // // add event listener to undo
-    // undoButton?.addEventListener('click', handleUndo);
-    // redoButton?.addEventListener('click', handleRedo);
+    function handleClear() {
+        painter.clear();
+    }
+    clearButton.addEventListener('click', handleClear);
 });

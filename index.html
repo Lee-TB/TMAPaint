@@ -8,11 +8,80 @@
     </head>
     <body>
         <div id="root">
+            <h1>TMA Paint</h1>
             <div class="wrapper">
-                <ul id="state-history"></ul>
+                <div>
+                    <table id="shape-table">
+                        <tr>
+                            <th>Name</th>
+                            <th>X</th>
+                            <th>Y</th>
+                            <th>Width</th>
+                            <th>Height</th>
+                            <th>Radius</th>
+                            <th>Actions</th>
+                        </tr>
+                        <tr>
+                            <td>rectangle</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td style="display: flex">
+                                <button class="btn btn-warning">
+                                    <span> update </span>
+                                    <span class="material-symbols-outlined"> update </span>
+                                </button>
+                                <button class="btn btn-danger">
+                                    <span> delete </span>
+
+                                    <span class="material-symbols-outlined"> delete </span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>circle</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td style="display: flex">
+                                <button class="btn btn-warning">
+                                    <span> update </span>
+                                    <span class="material-symbols-outlined"> update </span>
+                                </button>
+                                <button class="btn btn-danger">
+                                    <span> delete </span>
+
+                                    <span class="material-symbols-outlined"> delete </span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>circle</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td style="display: flex">
+                                <button class="btn btn-warning">
+                                    <span> update </span>
+                                    <span class="material-symbols-outlined"> update </span>
+                                </button>
+                                <button class="btn btn-danger">
+                                    <span> delete </span>
+
+                                    <span class="material-symbols-outlined"> delete </span>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
                 <div>
-                    <h1>TMA Paint</h1>
                     <div class="tools">
                         <div class="tool-group">
                             <button class="btn" id="undo-button">
@@ -25,6 +94,9 @@
                             </button>
                             <button class="btn" id="random-shape-button">
                                 <strong>Random</strong>
+                            </button>
+                            <button class="btn" id="clear-button">
+                                <strong>Clear</strong>
                             </button>
                         </div>
                         <div class="tool-group shape">

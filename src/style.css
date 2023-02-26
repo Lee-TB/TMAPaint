@@ -1,154 +1,174 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-*, ul {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+*,
+ul {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 ul {
-  list-style-type: none;
+    list-style-type: none;
 }
 
 #root {
-  text-align: center;
-  width: 100vw;
-  height: 100vh;
+    text-align: center;
+    width: 100vw;
+    height: 100vh;
 }
 
 .wrapper {
-  display: inline-flex;
-  flex-direction: row;
+    display: inline-flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
-#state-history {
-  margin: 120px 0;
-  padding: 0 20px;
-  min-width: 500px;
-  text-align: left;
+#shape-table {
 }
 
-#state-history li {
-  padding: 8px 0;
+td,
+th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
 }
 
-#state-history li strong {
-  margin-left: 4px;
+tr:nth-child(even) {
+    background-color: #dddddd;
 }
 
 h1 {
-  margin: 20px 0;
+    margin: 20px 0;
 }
 
 #canvas {
-  background-color: white;
-  border: 2px solid #ccc;
+    background-color: white;
+    border: 2px solid #ccc;
 }
 
 .btn {
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2px 4px;
-  outline: none;
-  border: none;
-  border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 4px;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn + .btn {
+    margin-left: 4px;
+}
+
+.btn-warning {
+    background-color: rgb(220, 150, 20);
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background-color: rgb(220, 150, 20, 0.8) !important;
+    color: #fff;
+}
+
+.btn-danger {
+    background-color: rgb(220, 20, 20);
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: rgba(220, 20, 20, 0.8) !important;
+    color: #fff;
 }
 
 .btn:disabled:hover {
-  background-color: rgba(239, 239, 239, 0.3);
-  color: rgba(16, 16, 16, 0.3);
-  cursor: unset;
+    background-color: rgba(239, 239, 239, 0.3);
+    color: rgba(16, 16, 16, 0.3);
+    cursor: unset;
 }
 
 .btn:hover {
-  background-color: #108fcf;
-  color: white;
+    background-color: #108fcf;
+    color: white;
 }
 
-
 .tools {
-  margin: 10px 0;
-  display: flex;
-  justify-content: space-between;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
 }
 
 .tool-group {
-  display: flex; 
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
-
 .material-symbols-outlined.fill {
-  font-variation-settings:
-  'FILL' 1,
-  'wght' 500,
-  'GRAD' 0,
-  'opsz' 48
+    font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 48;
 }
 
 /**
  * Simple HTML/CSS switch
  */
- .switch {
-  display: inline-block;
-  position: relative;
-  width: 50px;
-  height: 25px;
-  border-radius: 20px;
-  background: #dfd9ea;
-  transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  vertical-align: middle;
-  cursor: pointer;
+.switch {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 25px;
+    border-radius: 20px;
+    background: #dfd9ea;
+    transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    vertical-align: middle;
+    cursor: pointer;
 }
 .switch::before {
-  content: '';
-  position: absolute;
-  top: 1px;
-  left: 2px;
-  width: 22px;
-  height: 22px;
-  background: #fafafa;
-  border-radius: 50%;
-  transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    background: #fafafa;
+    border-radius: 50%;
+    transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .switch:active::before {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(128,128,128,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 20px rgba(128, 128, 128, 0.1);
 }
 input:checked + .switch {
-  background: #108fcf;
+    background: #108fcf;
 }
 
 input:checked + .switch::before {
-  left: 27px;
-  background: #fff;
+    left: 27px;
+    background: #fff;
 }
 input:checked + .switch:active::before {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 0 0 20px rgba(0,150,136,0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 20px rgba(0, 150, 136, 0.2);
 }
 
 /** style radio button */
-input[name="shape"] {
-  display: none;
-  appearance: none;
+input[name='shape'] {
+    display: none;
+    appearance: none;
 }
 
-input[name="shape"] + label {
-  cursor: pointer;
+input[name='shape'] + label {
+    cursor: pointer;
 }
 
-input[name="shape"] + label {
-  padding: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
+input[name='shape'] + label {
+    padding: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
 }
 
-input[name="shape"]:checked + label {
-  cursor: pointer;
-  background-color: #108fcf;
-  color: white;
+input[name='shape']:checked + label {
+    cursor: pointer;
+    background-color: #108fcf;
+    color: white;
 }
