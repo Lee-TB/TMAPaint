@@ -21,6 +21,9 @@ export class Circle2D extends Circle {
     }
 
     clone(): Shape {
-        return new Circle2D();
+        return new Circle2D(
+            new Point(this.getLocation().getX(), this.getLocation().getY()),
+            this.getRadius()
+        );
     }
 }

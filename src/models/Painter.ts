@@ -6,9 +6,19 @@ import { Shape } from './AbstractProduct/Shape';
 import { IShapeFactory } from './AbstractFactory/IShapeFactory';
 import { ShapeType } from './enums/ShapeType';
 
+interface ShapeData {
+    index: number;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    radius: number;
+}
+
 export class Painter {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
+    private tableElement?: HTMLTableElement;
     private shapeList: Shape[];
     private currentShape: Shape | null;
     private startPoint: Point | null;
@@ -68,6 +78,7 @@ export class Painter {
 
             this.shapeList.push(<Shape>this.currentShape);
             this.paintShapeList();
+            this.renderShapeTable(this.shapeList);
             this.undoStack.push(this.shapeList.slice());
             this.redoStack = []; // vẽ thì clear redo stack
             this.currentShape = null; // sau khi vẽ xong thì xóa nó đi
@@ -161,6 +172,7 @@ export class Painter {
             this.redoStack = []; // vẽ thì clear redo stack
             this.undoStack.push([...this.shapeList]); // đựa vào ngăn xếp để có thể undo
             console.log(this.undoStack);
+            this.renderShapeTable(this.shapeList);
             this.currentShape = null; // thu hôi vùng nhớ
             this.isPainting = false;
             this.startPoint = null;
@@ -185,6 +197,17 @@ export class Painter {
         this.shapeList = [];
         this.undoStack = [];
         this.redoStack = [];
+        this.renderShapeTable(this.shapeList);
+    }
+
+    /**
+     * printCanvas(): In hình ảnh
+     */
+    public printCanvas(): void {
+        const link = document.createElement('a'); // Đầu tiên ta tạo một thẻ a
+        link.download = 'canvas.png'; // thuộc tính dowload chỉ định tên tệp được tải xuống
+        link.href = this.canvas.toDataURL(); // thuộc tính href nhận vào chuổi URL đại diện cho đối tượng hình ảnh canvas
+        link.click(); // click để kích hoạt tải xuống
     }
 
     /**
@@ -198,14 +221,169 @@ export class Painter {
                 this.shapeList = [];
             }
             this.paintShapeList();
+            this.renderShapeTable(this.shapeList);
         }
     }
 
+    /**
+     * redo(): trở đi trạng thái vừa undo
+     */
     public redo() {
         if (this.redoStack.length > 0) {
             this.shapeList = this.redoStack.pop()!;
             this.undoStack.push(this.shapeList.slice());
             this.paintShapeList();
+            this.renderShapeTable(this.shapeList);
+        }
+    }
+
+    public setShapeTable(tableElement: HTMLTableElement) {
+        this.tableElement = tableElement;
+    }
+
+    private deleteShape(indexToDelete: number) {
+        this.shapeList.splice(indexToDelete, 1); // cho biết vị trí cần xóa
+        this.undoStack.push([...this.shapeList]); // đựa vào ngăn xếp để có thể undo
+        this.redoStack = []; // Xóa thì clear redo stack
+
+        this.paintShapeList(); // vẽ lại màn hình sau khi xóa
+        this.renderShapeTable(this.shapeList); // render lại table
+    }
+
+    private updateShape(shapeData: ShapeData) {
+        const { index: indexToUpdate, x, y, width, height, radius } = shapeData;
+
+        const shapeUpdate = this.shapeList.splice(indexToUpdate, 1)[0].clone(); // shape vẩn là đối tượng nằm trong List (không phải bản sao)
+        shapeUpdate.getLocation().setX(x);
+        shapeUpdate.getLocation().setY(y);
+
+        if (shapeUpdate instanceof Rectangle) {
+            shapeUpdate.setWidth(width);
+            shapeUpdate.setHeight(height);
+        } else if (shapeUpdate instanceof Circle) {
+            shapeUpdate.setRadius(radius);
+        }
+
+        this.shapeList.push(shapeUpdate); // sau khi đã cập nhật xong thì đưa nó vào sau cùng của shapeList
+        this.undoStack.push([...this.shapeList]); // đựa vào ngăn xếp để có thể undo
+        this.redoStack = []; // vẽ thì clear redo stack
+        this.paintShapeList(); // vẽ lại màn hình sau khi xóa
+        this.renderShapeTable(this.shapeList); // render lại table
+    }
+
+    private renderShapeTable(shapeList: Shape[]) {
+        if (this.tableElement) {
+            const tbodyHTML = shapeList
+                .map((shape, index) => {
+                    if (shape instanceof Rectangle) {
+                        const shapeData = JSON.stringify({
+                            index: index,
+                            name: 'rectangle',
+                            x: shape.getLocation().getX(),
+                            y: shape.getLocation().getY(),
+                            width: shape.getWidth(),
+                            height: shape.getHeight(),
+                        });
+
+                        return `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>rectangle</td>
+                            <td contenteditable="true">${shape.getLocation().getX()}</td>
+                            <td contenteditable="true">${shape.getLocation().getY()}</td>
+                            <td contenteditable="true">${shape.getWidth()}</td>
+                            <td contenteditable="true">${shape.getHeight()}</td>
+                            <td>null</td>
+                            <td style="display: flex">
+                                <button class="btn btn-warning" data-index='${index}'>
+                                    <span> update </span>
+                                    <span class="material-symbols-outlined"> update </span>
+                                </button>
+                                <button class="btn btn-danger" data-index='${index}'>
+                                    <span> delete </span>
+                                    <span class="material-symbols-outlined"> delete </span>
+                                </button>
+                            </td>
+                        </tr>`;
+                    } else if (shape instanceof Circle) {
+                        const shapeData = JSON.stringify({
+                            index: index,
+                            name: 'circle',
+                            x: shape.getLocation().getX(),
+                            y: shape.getLocation().getY(),
+                            radius: shape.getRadius(),
+                        });
+                        return `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>circle</td>
+                            <td contenteditable="true">${shape.getLocation().getX()}</td>
+                            <td contenteditable="true">${shape.getLocation().getY()}</td>
+                            <td>null</td>
+                            <td>null</td>
+                            <td contenteditable="true">${shape.getRadius().toFixed(2)}</td>
+                            <td style="display: flex">
+                                <button class="btn btn-warning" data-index='${index}'>
+                                    <span> update </span>
+                                    <span class="material-symbols-outlined"> update </span>
+                                </button>
+                                <button class="btn btn-danger" data-index='${index}'>
+                                    <span> delete </span>
+                                    <span class="material-symbols-outlined"> delete </span>
+                                </button>
+                            </td>
+                        </tr>`;
+                    }
+                })
+                .join('');
+            this.tableElement.tBodies[0].innerHTML = tbodyHTML;
+
+            // Xử lý sự kiện click cho các button "delete"
+            const deleteButtons = this.tableElement.querySelectorAll(
+                '.btn-danger'
+            ) as NodeListOf<HTMLButtonElement>;
+            deleteButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const index = Number(button.dataset.index);
+                    this.deleteShape(index);
+                });
+            });
+
+            // Xử lý sự kiện click cho các button "update"
+            const updateButtons = this.tableElement.querySelectorAll(
+                '.btn-warning'
+            ) as NodeListOf<HTMLButtonElement>;
+            updateButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const index = Number(button.dataset.index);
+                    // Lấy dữ liệu từ các thẻ td
+                    const xValue = Number(
+                        button.parentElement!.parentElement!.querySelectorAll('td')[2].innerText
+                    );
+                    const yValue = Number(
+                        button.parentElement!.parentElement!.querySelectorAll('td')[3].innerText
+                    );
+                    const widthValue = Number(
+                        button.parentElement!.parentElement!.querySelectorAll('td')[4].innerText
+                    );
+                    const heightValue = Number(
+                        button.parentElement!.parentElement!.querySelectorAll('td')[5].innerText
+                    );
+                    const radiusValue = Number(
+                        button.parentElement!.parentElement!.querySelectorAll('td')[6].innerText
+                    );
+
+                    const shapeData: ShapeData = {
+                        index,
+                        x: xValue,
+                        y: yValue,
+                        width: widthValue,
+                        height: heightValue,
+                        radius: radiusValue,
+                    };
+                    this.updateShape(shapeData);
+                });
+            });
         }
     }
 }

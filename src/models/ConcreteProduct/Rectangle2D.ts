@@ -18,6 +18,10 @@ export class Rectangle2D extends Rectangle {
     }
 
     clone(): Shape {
-        return new Rectangle2D();
+        return new Rectangle2D(
+            new Point(this.getLocation().getX(), this.getLocation().getY()),
+            this.getWidth(),
+            this.getHeight()
+        );
     }
 }

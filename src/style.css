@@ -13,15 +13,14 @@ ul {
 }
 
 #root {
-    text-align: center;
-    width: 100vw;
-    height: 100vh;
 }
 
 .wrapper {
-    display: inline-flex;
+    display: flex;
     flex-direction: row;
     gap: 10px;
+    padding: 0 40px;
+    justify-content: space-between;
 }
 
 #shape-table {
@@ -40,6 +39,7 @@ tr:nth-child(even) {
 
 h1 {
     margin: 20px 0;
+    text-align: center;
 }
 
 #canvas {

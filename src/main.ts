@@ -14,6 +14,7 @@ window.addEventListener('load', () => {
     const undoButton = document.querySelector('#undo-button') as HTMLButtonElement;
     const redoButton = document.querySelector('#redo-button') as HTMLButtonElement;
     const clearButton = document.querySelector('#clear-button') as HTMLButtonElement;
+    const printButton = document.querySelector('#print-button') as HTMLButtonElement;
     const addRandomButton = document.querySelector('#random-shape-button') as HTMLButtonElement;
     const shapeButtonList: NodeListOf<HTMLInputElement> =
         document.querySelectorAll('input[name="shape"]');
@@ -51,26 +52,37 @@ window.addEventListener('load', () => {
             }
         });
     }
-    // Gọi ngay lặp tức bởi vì mặc định sẽ có một shape được chọn
-    handleChangeShape();
+    handleChangeShape(); // Gọi ngay lặp tức bởi vì mặc định sẽ có một shape được chọn
 
     // Mỗi lần thay đổi shape ta sẽ lắng nghe lại sự kiện
     shapeButtonList.forEach((shapeButton) => {
         shapeButton.addEventListener('change', handleChangeShape);
     });
 
+    // Chức năng undo
     function handleUndo() {
         painter.undo();
     }
     undoButton.addEventListener('click', handleUndo);
 
+    // Chức năng redo
     function handleRedo() {
         painter.redo();
     }
     redoButton.addEventListener('click', handleRedo);
 
+    // Chức năng clear màn hình
     function handleClear() {
         painter.clear();
     }
     clearButton.addEventListener('click', handleClear);
+
+    // Chức năng in
+    function handlePrint() {
+        painter.printCanvas();
+    }
+    printButton.addEventListener('click', handlePrint);
+
+    // Hiển thị bảng các hình
+    painter.setShapeTable(shapeTable);
 });

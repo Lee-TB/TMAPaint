@@ -12,72 +12,19 @@
             <div class="wrapper">
                 <div>
                     <table id="shape-table">
-                        <tr>
-                            <th>Name</th>
-                            <th>X</th>
-                            <th>Y</th>
-                            <th>Width</th>
-                            <th>Height</th>
-                            <th>Radius</th>
-                            <th>Actions</th>
-                        </tr>
-                        <tr>
-                            <td>rectangle</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td style="display: flex">
-                                <button class="btn btn-warning">
-                                    <span> update </span>
-                                    <span class="material-symbols-outlined"> update </span>
-                                </button>
-                                <button class="btn btn-danger">
-                                    <span> delete </span>
-
-                                    <span class="material-symbols-outlined"> delete </span>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>circle</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td style="display: flex">
-                                <button class="btn btn-warning">
-                                    <span> update </span>
-                                    <span class="material-symbols-outlined"> update </span>
-                                </button>
-                                <button class="btn btn-danger">
-                                    <span> delete </span>
-
-                                    <span class="material-symbols-outlined"> delete </span>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>circle</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td style="display: flex">
-                                <button class="btn btn-warning">
-                                    <span> update </span>
-                                    <span class="material-symbols-outlined"> update </span>
-                                </button>
-                                <button class="btn btn-danger">
-                                    <span> delete </span>
-
-                                    <span class="material-symbols-outlined"> delete </span>
-                                </button>
-                            </td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Name</th>
+                                <th>X</th>
+                                <th>Y</th>
+                                <th>Width</th>
+                                <th>Height</th>
+                                <th>Radius</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
                     </table>
                 </div>
 
@@ -85,18 +32,21 @@
                     <div class="tools">
                         <div class="tool-group">
                             <button class="btn" id="undo-button">
+                                <strong>Undo</strong>
                                 <span class="material-symbols-outlined"> undo </span>
-                                <span>undo</span>
                             </button>
                             <button class="btn" id="redo-button">
+                                <strong>Redo</strong>
                                 <span class="material-symbols-outlined"> redo </span>
-                                <span>redo</span>
                             </button>
                             <button class="btn" id="random-shape-button">
                                 <strong>Random</strong>
                             </button>
                             <button class="btn" id="clear-button">
                                 <strong>Clear</strong>
+                            </button>
+                            <button class="btn" id="print-button">
+                                <strong>Print</strong>
                             </button>
                         </div>
                         <div class="tool-group shape">
