@@ -1,7 +1,7 @@
 import { ShapeType } from './models/enums/ShapeType';
 import { ShapeFactoryType } from './models/enums/ShapeFactoryType';
 import { FactoryMaker } from './models/FactoryMaker/FactoryMaker';
-import { Painter } from './models/Painter';
+import { Painter } from './controllers/Painter';
 import './style.css';
 
 const SCREEN_WIDTH = 1600;
@@ -21,22 +21,23 @@ window.addEventListener('load', () => {
     const shapeTable = document.querySelector('#shape-table') as HTMLTableElement;
 
     /**
-     * Khởi tạo các đổi tượng cần thiết
+     * Khởi tạo painter
      */
-    // Gọi canvas dom
-    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    // Tạo shapeFactory từ factoryMaker
-    const shapeFactory = FactoryMaker.getInstance().createFactory(ShapeFactoryType.Shape2D);
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement; // Gọi canvas dom
+    const shapeFactory = FactoryMaker.getInstance().createFactory(ShapeFactoryType.Shape2D); // Tạo shapeFactory từ factoryMaker
     const painter = new Painter(canvas, shapeFactory);
-    painter.setScreen(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    painter.setScreen((SCREEN_WIDTH * 2) / 3, (SCREEN_HEIGHT * 2) / 3);
 
-    // Thực hiện tạo hình ngẫu nhiên khi nhấn nút
+    /**Thực hiện tạo hình ngẫu nhiên khi nhấn nút */
     function handleAddRandom() {
         painter.paintRandomShape();
     }
     addRandomButton.addEventListener('click', handleAddRandom);
 
-    // Lắng nghe sự kiện kéo thả chuột
+    /**
+     * Viết các Nút chức năng
+     */
+    /**Lắng nghe sự kiện kéo thả chuột */
     function handleChangeShape() {
         shapeButtonList.forEach((shapeButton) => {
             if (shapeButton.value === 'rectangle' && shapeButton.checked) {
@@ -54,35 +55,35 @@ window.addEventListener('load', () => {
     }
     handleChangeShape(); // Gọi ngay lặp tức bởi vì mặc định sẽ có một shape được chọn
 
-    // Mỗi lần thay đổi shape ta sẽ lắng nghe lại sự kiện
+    /**Mỗi lần thay đổi shape ta sẽ lắng nghe lại sự kiện */
     shapeButtonList.forEach((shapeButton) => {
         shapeButton.addEventListener('change', handleChangeShape);
     });
 
-    // Chức năng undo
+    /**Chức năng undo */
     function handleUndo() {
         painter.undo();
     }
     undoButton.addEventListener('click', handleUndo);
 
-    // Chức năng redo
+    /**Chức năng redo  */
     function handleRedo() {
         painter.redo();
     }
     redoButton.addEventListener('click', handleRedo);
 
-    // Chức năng clear màn hình
+    /**Chức năng clear màn hình */
     function handleClear() {
         painter.clear();
     }
     clearButton.addEventListener('click', handleClear);
 
-    // Chức năng in
+    /**Chức năng in */
     function handlePrint() {
         painter.printCanvas();
     }
     printButton.addEventListener('click', handlePrint);
 
-    // Hiển thị bảng các hình
+    /**Hiển thị bảng các hình, cần truyền bảng vào */
     painter.setShapeTable(shapeTable);
 });

@@ -1,10 +1,10 @@
 import { getRandomNumber } from '../utils/getRandomNumber';
-import { Circle } from './AbstractProduct/Circle';
-import { Point } from './AbstractProduct/Point';
-import { Rectangle } from './AbstractProduct/Rectangle';
-import { Shape } from './AbstractProduct/Shape';
-import { IShapeFactory } from './AbstractFactory/IShapeFactory';
-import { ShapeType } from './enums/ShapeType';
+import { Circle } from '../models/AbstractProduct/Circle';
+import { Point } from '../models/AbstractProduct/Point';
+import { Rectangle } from '../models/AbstractProduct/Rectangle';
+import { Shape } from '../models/AbstractProduct/Shape';
+import { IShapeFactory } from '../models/AbstractFactory/IShapeFactory';
+import { ShapeType } from '../models/enums/ShapeType';
 
 interface ShapeData {
     index: number;
@@ -15,6 +15,9 @@ interface ShapeData {
     radius: number;
 }
 
+/**
+ * Lớp Painter có nhiệm vụ thực hiện các chức năng liên quan đếm vẽ hình
+ */
 export class Painter {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
@@ -53,9 +56,9 @@ export class Painter {
         const randomShape = getRandomNumber(0, 1);
         let shape: Shape;
         if (randomShape) {
-            shape = this.shapeFactory.createShape(ShapeType.rectangle);
+            shape = this.shapeFactory.createShape(ShapeType.rectangle); // tạo shape
         } else {
-            shape = this.shapeFactory.createShape(ShapeType.circle);
+            shape = this.shapeFactory.createShape(ShapeType.circle); // tạo shape
         }
         this.setShape(shape);
 
@@ -130,18 +133,17 @@ export class Painter {
     }
 
     /**
-     * xử lý sự kiện mousedown
+     * Xử lý sự kiện mousedown
      * @param event
      */
     private handleMouseDown(event: MouseEvent) {
         this.startPoint = new Point(event.offsetX, event.offsetY);
         this.isPainting = true;
-        // Tạo shape mỗi lần nhấn chuột
-        this.currentShape = this.shapeFactory!.createShape(<ShapeType>this.shapeType);
+        this.currentShape = this.shapeFactory!.createShape(<ShapeType>this.shapeType); // Tạo shape mỗi lần nhấn chuột
     }
 
     /**
-     * xử lý sự kiện mousemove
+     * Xử lý sự kiện mousemove
      * @param event
      */
     private handleMouseMove(event: MouseEvent) {
@@ -163,7 +165,7 @@ export class Painter {
         }
     }
 
-    // xử lý sự kiện mouseup
+    // Xử lý sự kiện mouseup
     private handleMouseUp(event: MouseEvent) {
         if (this.isPainting) {
             // lưu hình vào danh sách để vẽ và thu hồi curentShape
@@ -190,7 +192,7 @@ export class Painter {
     }
 
     /**
-     * clear(): làm sạch tất cả
+     * Làm sạch tất cả
      */
     public clear() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -201,7 +203,7 @@ export class Painter {
     }
 
     /**
-     * printCanvas(): In hình ảnh
+     * In hình ảnh
      */
     public printCanvas(): void {
         const link = document.createElement('a'); // Đầu tiên ta tạo một thẻ a
@@ -211,7 +213,7 @@ export class Painter {
     }
 
     /**
-     * undo(): trở về trạng thái trước đó
+     * Trở về trạng thái trước đó
      */
     public undo() {
         if (this.undoStack.length > 0) {
@@ -226,7 +228,7 @@ export class Painter {
     }
 
     /**
-     * redo(): trở đi trạng thái vừa undo
+     * Trở đi trạng thái vừa undo
      */
     public redo() {
         if (this.redoStack.length > 0) {
@@ -241,6 +243,10 @@ export class Painter {
         this.tableElement = tableElement;
     }
 
+    /**
+     * Xóa một hình
+     * @param indexToDelete vị trí cần xóa
+     */
     private deleteShape(indexToDelete: number) {
         this.shapeList.splice(indexToDelete, 1); // cho biết vị trí cần xóa
         this.undoStack.push([...this.shapeList]); // đựa vào ngăn xếp để có thể undo
@@ -250,6 +256,10 @@ export class Painter {
         this.renderShapeTable(this.shapeList); // render lại table
     }
 
+    /**
+     * Cập nhật một hình
+     * @param shapeData
+     */
     private updateShape(shapeData: ShapeData) {
         const { index: indexToUpdate, x, y, width, height, radius } = shapeData;
 
@@ -271,20 +281,15 @@ export class Painter {
         this.renderShapeTable(this.shapeList); // render lại table
     }
 
+    /**
+     * Render ra màn hình bảng thông tin các hình vừa vẽ
+     * @param shapeList truyền vào danh sách shape
+     */
     private renderShapeTable(shapeList: Shape[]) {
         if (this.tableElement) {
             const tbodyHTML = shapeList
                 .map((shape, index) => {
                     if (shape instanceof Rectangle) {
-                        const shapeData = JSON.stringify({
-                            index: index,
-                            name: 'rectangle',
-                            x: shape.getLocation().getX(),
-                            y: shape.getLocation().getY(),
-                            width: shape.getWidth(),
-                            height: shape.getHeight(),
-                        });
-
                         return `
                         <tr>
                             <td>${index + 1}</td>
@@ -306,13 +311,6 @@ export class Painter {
                             </td>
                         </tr>`;
                     } else if (shape instanceof Circle) {
-                        const shapeData = JSON.stringify({
-                            index: index,
-                            name: 'circle',
-                            x: shape.getLocation().getX(),
-                            y: shape.getLocation().getY(),
-                            radius: shape.getRadius(),
-                        });
                         return `
                         <tr>
                             <td>${index + 1}</td>

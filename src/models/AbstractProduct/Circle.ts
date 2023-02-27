@@ -6,10 +6,18 @@ export abstract class Circle extends Shape {
         super(location);
     }
 
+    /**
+     *
+     * @returns bán kính hình tròn
+     */
     public getRadius(): number {
         return this._radius;
     }
 
+    /**
+     *
+     * @param radius truyền vào bán kính
+     */
     public setRadius(radius: number): void {
         this._radius = radius;
     }
